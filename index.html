@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f7f9">
+  <title>记忆卡片</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row">
+        <a class="brand" href="#" id="home-link" aria-label="记忆卡片首页">
+          <span class="brand-mark" aria-hidden="true">记</span>
+          <span>记忆卡片</span>
+        </a>
+        <button class="icon-button sidebar-close" id="sidebar-close" type="button" aria-label="关闭卡组列表">×</button>
+      </div>
+
+      <div class="sidebar-heading">
+        <span>我的卡组</span>
+        <button class="icon-button" id="add-deck-icon" type="button" aria-label="新建卡组" title="新建卡组">＋</button>
+      </div>
+      <nav class="deck-nav" id="deck-nav" aria-label="卡组列表"></nav>
+      <button class="secondary-button full-width" id="add-deck-button" type="button">
+        <span aria-hidden="true">＋</span> 新建卡组
+      </button>
+      <p class="storage-note"><span class="status-dot" aria-hidden="true"></span>数据已保存在此浏览器</p>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menu-button" type="button" aria-label="打开卡组列表">☰</button>
+        <div class="topbar-title">卡片库</div>
+        <div class="topbar-actions">
+          <button class="secondary-button" id="rename-deck-button" type="button">重命名</button>
+          <button class="danger-text-button" id="delete-deck-button" type="button">删除卡组</button>
+        </div>
+      </header>
+
+      <section class="library-view" id="library-view">
+        <div class="content-header">
+          <div>
+            <p class="eyebrow">当前卡组</p>
+            <h1 id="deck-title">英语单词</h1>
+            <p class="subtle" id="deck-summary">0 张卡片</p>
+          </div>
+          <div class="header-actions">
+            <button class="secondary-button" id="add-card-button" type="button">
+              <span aria-hidden="true">＋</span> 新增卡片
+            </button>
+            <button class="primary-button" id="study-button" type="button">开始背诵 <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+
+        <div class="card-grid" id="card-grid"></div>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <div class="empty-icon" aria-hidden="true">Aa</div>
+          <h2>这个卡组还是空的</h2>
+          <p>添加第一张卡片，写下需要记住的问题和答案。</p>
+          <button class="primary-button" id="empty-add-button" type="button">新增第一张卡片</button>
+        </div>
+      </section>
+
+      <section class="study-view" id="study-view" hidden>
+        <div class="study-header">
+          <button class="secondary-button" id="exit-study-button" type="button"><span aria-hidden="true">←</span> 退出背诵</button>
+          <div class="study-meta">
+            <strong id="study-deck-name"></strong>
+            <span id="study-progress-text">1/1</span>
+          </div>
+        </div>
+        <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+
+        <div class="study-stage">
+          <p class="side-label" id="study-side-label">正面</p>
+          <button class="flashcard" id="flashcard" type="button" aria-describedby="flip-hint">
+            <span class="flashcard-inner">
+              <span class="flashcard-face flashcard-front">
+                <span class="flashcard-content" id="study-front"></span>
+              </span>
+              <span class="flashcard-face flashcard-back">
+                <span class="flashcard-content" id="study-back"></span>
+              </span>
+            </span>
+          </button>
+          <p class="flip-hint" id="flip-hint">点击卡片查看答案</p>
+          <div class="study-controls">
+            <button class="secondary-button" id="previous-card-button" type="button">上一张</button>
+            <button class="primary-button" id="next-card-button" type="button">下一张</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="study-complete" id="study-complete" hidden>
+        <div class="complete-content">
+          <div class="complete-mark" aria-hidden="true">✓</div>
+          <p class="eyebrow">本轮完成</p>
+          <h1>已经复习完全部卡片</h1>
+          <p class="subtle" id="complete-summary"></p>
+          <div class="complete-actions">
+            <button class="secondary-button" id="complete-exit-button" type="button">返回卡片库</button>
+            <button class="primary-button" id="restart-study-button" type="button">随机再来一轮</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="sidebar-scrim" id="sidebar-scrim" hidden></div>
+
+  <div class="modal-layer" id="deck-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="deck-modal-title">
+      <div class="modal-header">
+        <h2 id="deck-modal-title">新建卡组</h2>
+        <button class="icon-button modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <form id="deck-form">
+        <label for="deck-name">卡组名称</label>
+        <input id="deck-name" name="deckName" type="text" maxlength="30" autocomplete="off" placeholder="例如：产品设计" required>
+        <p class="field-error" id="deck-name-error" hidden></p>
+        <div class="modal-actions">
+          <button class="secondary-button modal-close" type="button">取消</button>
+          <button class="primary-button" id="deck-submit-button" type="submit">创建卡组</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-layer" id="card-modal" hidden>
+    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="card-modal-title">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">记忆卡片</p>
+          <h2 id="card-modal-title">新增卡片</h2>
+        </div>
+        <button class="icon-button modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <form id="card-form">
+        <label for="card-front">正面内容</label>
+        <textarea id="card-front" name="front" rows="4" maxlength="500" placeholder="输入问题、单词或提示" required></textarea>
+        <label for="card-back">背面内容</label>
+        <textarea id="card-back" name="back" rows="5" maxlength="1000" placeholder="输入答案、释义或解释" required></textarea>
+        <p class="field-error" id="card-error" hidden></p>
+        <div class="modal-actions">
+          <button class="secondary-button modal-close" type="button">取消</button>
+          <button class="primary-button" id="card-submit-button" type="submit">保存卡片</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-layer" id="confirm-modal" hidden>
+    <div class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="modal-header">
+        <h2 id="confirm-title">确认删除</h2>
+        <button class="icon-button modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <p class="confirm-message" id="confirm-message"></p>
+      <div class="modal-actions">
+        <button class="secondary-button modal-close" type="button">取消</button>
+        <button class="danger-button" id="confirm-button" type="button">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
